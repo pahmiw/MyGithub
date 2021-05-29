@@ -68,8 +68,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
 
-
+    //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+
+    //paging
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 }
 kapt {
     correctErrorTypes true
