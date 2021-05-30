@@ -13,8 +13,8 @@ class GithubRepositoryImpl @Inject constructor(
     private val remoteDataSource: GithubRemoteDataSource,
     private val mapper: SearchGithubUserMapper
 ) : GithubRepository {
-    override suspend fun searchGithubUser(query: String): Result<List<SearchGithubUser>> {
-        return when (val apiResult = remoteDataSource.searchGithubUser(dispatcher.io, query)) {
+    override suspend fun searchGithubUser(query: String, page: Int, perPage: Int): Result<List<SearchGithubUser>> {
+        return when (val apiResult = remoteDataSource.searchGithubUser(dispatcher.io, query, page, perPage)) {
             is Result.Success -> Result.Success(mapper.map(apiResult.data))
             is Result.Error -> Result.Error(apiResult.cause, apiResult.code, apiResult.errorMessage)
             else -> Result.Error()
