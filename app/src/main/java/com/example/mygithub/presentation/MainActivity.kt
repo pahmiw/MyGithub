@@ -3,6 +3,7 @@ package com.example.mygithub.presentation
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,16 +23,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, GithubUserViewModel>() {
     override fun getViewModelClass(): Class<GithubUserViewModel> = GithubUserViewModel::class.java
     private val adapter by lazy { GithubUserAdapter(emptyList()) }
     private var page = 1
-    private var perPage = 10
+    private var perPage = 30
     private var githubUsers = mutableListOf<SearchGithubUser>()
+    private var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupRecycleView()
         observeSearchGithubUser()
-        vm.searchGithubUserByName("fahmi", page, perPage)
+        setupSearchView()
     }
 
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                vm.searchGithubUserByName(query ?: return true, page, perPage)
+                username = query
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+    }
 
     private fun observeSearchGithubUser() {
         vm.githubUser.observe(this, Observer {
@@ -49,7 +65,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, GithubUserViewModel>() {
                 }
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this, "terdapat kesalahan pada aplikasi, mohon tunggu sebentar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "terdapat kesalahan pada aplikasi, mohon tunggu sebentar",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         })
@@ -62,7 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, GithubUserViewModel>() {
 
         binding.rvGithubUsers.addOnScrollListener(object : EndlessRecyclerOnScrollListener(layoutManager) {
             override fun onLoadMore(current_page: Int) {
-                vm.searchGithubUserByName("fahmi", current_page, perPage)
+                vm.searchGithubUserByName(username, current_page, perPage)
             }
 
         })
