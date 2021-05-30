@@ -3,7 +3,6 @@ package com.example.mygithub.utils
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
